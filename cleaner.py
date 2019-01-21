@@ -15,4 +15,4 @@ def import_and_resize(df_entry, width=250, height=250):
     with open(filename, 'r+b') as f:
         with Image.open(f) as img:
             new_img = img.resize((width,height))
-            new_img.save(filename, "JPEG", optimize=True)
+            new_img.convert("RGB").save(filename, "JPEG", optimize=True)
