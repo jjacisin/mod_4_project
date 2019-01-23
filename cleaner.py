@@ -16,6 +16,17 @@ def create_dataframe(exclude=[]):
     df = df.loc[~df['cat_id'].isin(exclude)]
     return df
 
+from sklearn.utils import resample
+
+def resample_dataframe(df, sample_size):
+    resampled_df_list = []
+    for category, group in df.groupby('category'):
+        replace = len(group) < sample_size
+        df_group_resampled = resample(group, replace=replace, n_samples=sample_size, random_state=123)
+        resampled_df_list.append(df_group_resampled)
+    
+    return pd.concat(resampled_df_list).reset_index()
+
 cat_id_dict = create_dataframe().groupby('category').min()['cat_id'].sort_values()
 
 def get_categories(df):
