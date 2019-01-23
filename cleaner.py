@@ -40,7 +40,7 @@ def build_images_parallel(df, num_threads):
           p.start()
           
 
-def import_and_resize(df_entry, width=250, height=250):
+def import_and_resize(df_entry, width=256, height=256):
     filename = 'pictures/{}'.format(df_entry["img_file"])
 
     #pull file
