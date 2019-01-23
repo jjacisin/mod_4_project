@@ -8,11 +8,18 @@ import pandas as pd
 
 write_lock = multiprocessing.Lock()
 
+other = [3,8,10,11,14,15,18, 20,25,27, 28,29, 30,31]
 
-def create_dataframe():
+def create_dataframe(exclude=[]):
     df = pd.read_csv('books.csv',encoding="latin",header=None)
     df.columns = ['img_idx','img_file','img_link','title','author','cat_id','category']
+    df = df.loc[~df['cat_id'].isin(exclude)]
     return df
+
+cat_id_dict = create_dataframe().groupby('category').min()['cat_id'].sort_values()
+
+def get_categories(df):
+    return df.groupby('category').min()['cat_id'].sort_values()
 
 def build_images_linear(df, thread_id=0):   
     print('thread_id: ', thread_id, ' starting')
@@ -40,7 +47,7 @@ def build_images_parallel(df, num_threads):
           p.start()
           
 
-def import_and_resize(df_entry, width=256, height=256):
+def import_and_resize(df_entry, width=299, height=299):
     filename = 'pictures/{}'.format(df_entry["img_file"])
 
     #pull file
